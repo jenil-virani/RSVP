@@ -105,11 +105,8 @@
     <p><strong>Date & Time:</strong> Saturday, May 24 at 8:00 PM</p>
     <p><strong>Venue:</strong> Meadowlands Retirement, Ancaster, ON</p>
 
-    <form name="rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thank-you.html">
+    <form name="rsvp" method="POST" data-netlify="true" action="thank-you.html">
       <input type="hidden" name="form-name" value="rsvp" />
-      <p hidden>
-        <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
-      </p>
 
       <label for="name">Your Full Name</label>
       <input type="text" id="name" name="name" required />
