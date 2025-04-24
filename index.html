@@ -9,55 +9,35 @@
     body {
       margin: 0;
       font-family: 'Open Sans', sans-serif;
-      background-color: #faf5f0;
+      background-color: #fdf7f1;
       color: #444;
     }
     header {
-      position: relative;
-      height: 350px;
-      overflow: hidden;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('image.png') center/cover no-repeat;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
-    }
-    header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('image.png') center/cover no-repeat;
-      filter: blur(8px);
-      z-index: 0;
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      background-color: #fff6e9;
+      border-bottom: 4px solid #ca6f1e;
     }
     header img {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      max-height: 100%;
-      max-width: 100%;
-      z-index: 1;
-      object-fit: contain;
+      width: 180px;
+      height: auto;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     header h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 3.5rem;
-      margin: 0;
-      position: relative;
-      z-index: 2;
+      font-size: 2.8rem;
+      margin: 1rem 0 0.5rem;
+      color: #a44c00;
     }
     .container {
       max-width: 650px;
-      margin: -50px auto 3rem;
+      margin: 2rem auto;
       background: white;
       padding: 2.5rem;
       border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
     .container p {
       font-size: 1.1rem;
@@ -94,18 +74,21 @@
     button:hover {
       background-color: #a9510e;
     }
+    #guestCountGroup, #guestNamesGroup {
+      display: none;
+    }
   </style>
 </head>
 <body>
   <header>
-    <img src="image.png" alt="Daulat Birthday Header" />
+    <img src="image.png" alt="Daulat Birthday Portrait" />
     <h1>Daulat's 95th Bash</h1>
   </header>
   <div class="container">
     <p><strong>Date & Time:</strong> Saturday, May 24 at 8:00 PM</p>
     <p><strong>Venue:</strong> Meadowlands Retirement, Ancaster, ON</p>
 
-    <form name="rsvp" method="POST" data-netlify="true" action="thank-you.html">
+    <form name="rsvp" method="POST" data-netlify="true" action="/RSVP/thank-you.html">
       <input type="hidden" name="form-name" value="rsvp" />
 
       <label for="name">Your Full Name</label>
@@ -119,13 +102,20 @@
       </select>
 
       <label for="bringing">Bringing additional guest(s)?</label>
-      <select id="bringing" name="bringing" required>
+      <select id="bringing" name="bringing" required onchange="handleGuestOption(this.value)">
         <option value="No">No</option>
         <option value="Yes">Yes</option>
       </select>
 
-      <label for="guestNames">If yes, list their names</label>
-      <textarea id="guestNames" name="guestNames" rows="3"></textarea>
+      <div id="guestCountGroup">
+        <label for="guestCount">How many additional guests?</label>
+        <input type="number" id="guestCount" name="guestCount" min="1" max="10" onchange="handleGuestCountChange(this.value)" />
+      </div>
+
+      <div id="guestNamesGroup">
+        <label for="guestNames">List their names</label>
+        <textarea id="guestNames" name="guestNames" rows="3"></textarea>
+      </div>
 
       <label for="message">Any message for Daulat?</label>
       <textarea id="message" name="message" rows="3"></textarea>
@@ -133,5 +123,37 @@
       <button type="submit">Send RSVP</button>
     </form>
   </div>
+
+  <script>
+    function handleGuestOption(value) {
+      const countGroup = document.getElementById('guestCountGroup');
+      const namesGroup = document.getElementById('guestNamesGroup');
+      const guestCountInput = document.getElementById('guestCount');
+      const guestNamesInput = document.getElementById('guestNames');
+      if (value === 'Yes') {
+        countGroup.style.display = 'block';
+        namesGroup.style.display = 'block';
+      } else {
+        countGroup.style.display = 'none';
+        namesGroup.style.display = 'none';
+        guestCountInput.value = '';
+        guestNamesInput.value = '';
+      }
+    }
+
+    function handleGuestCountChange(value) {
+      const namesField = document.getElementById('guestNames');
+      const count = parseInt(value);
+      if (!isNaN(count) && count > 0) {
+        let lines = '';
+        for (let i = 1; i <= count; i++) {
+          lines += `Guest ${i}:\n`;
+        }
+        namesField.value = lines;
+      } else {
+        namesField.value = '';
+      }
+    }
+  </script>
 </body>
 </html>
